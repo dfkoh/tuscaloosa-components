@@ -1,0 +1,232 @@
+* {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+
+@media only screen and (max-width: 399px) {
+    .projection {
+        flex-direction: column;
+    }
+
+    .boxes {
+        /*border: solid 1px red;*/
+        grid-template-rows: repeat(auto-fill, 14px);
+        grid-template-columns: repeat(15, 14px);
+        width: 100%;
+    }
+
+    .box {
+        width: 10px;
+        height: 10px;
+        margin: 2px;
+    }
+}
+
+@media only screen and (min-width: 400px) {
+    .projection {
+        flex-direction: column;
+    }
+    .boxes {
+        /*border: solid 1px orange;*/
+        grid-template-rows: repeat(auto-fill, 16px);
+        grid-template-columns: repeat(15, 16px);
+        width: 100%;
+    }
+
+    .box {
+        width: 12px;
+        height: 12px;
+        margin: 2px;
+    }
+}
+
+@media screen and (min-width: 600px) {
+    .projection {
+        flex-direction: column;
+    }
+
+    .boxes {
+        /*border: solid 1px yellow;*/
+        grid-template-rows: repeat(auto-fill, 20px);
+        grid-template-columns: repeat(15, 20px);
+    }
+
+    .box {
+        width: 14px;
+        height: 14px;
+        margin: 3px;
+    }
+}
+
+@media screen and (min-width: 900px) {
+    .projection {
+        flex-direction: row;
+    }
+
+    .boxes {
+        /*border: solid 1px blue;*/
+        grid-template-rows: repeat(auto-fill, 26px);
+        grid-template-columns: repeat(15, 26px);
+    }
+
+    .box {
+        width: 20px;
+        height: 20px;
+        margin: 3px;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .projection {
+        flex-direction: row;
+    }
+
+    .boxes {
+        /*border: solid 1px purple;*/
+        grid-template-rows: repeat(auto-fill, 26px);
+        grid-template-columns: repeat(15, 26px);
+    }
+
+    .box {
+        width: 20px;
+        height: 20px;
+        margin: 3px;
+    }
+}
+
+.projection {
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    padding: 20px;
+}
+
+.boxContainer {
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+}
+
+.boxes {
+    display: grid;
+}
+
+.shrink .box {
+    -webkit-transform: scale(0.5);
+    -ms-transform: scale(0.5);
+    transform: scale(0.5);
+}
+
+.box {
+    -webkit-transition-duration: 0.25s;
+    -ms-transition-timing-function: ease-out;
+
+    transition-duration: 0.25s;
+    transition-timing-function: ease-out;
+
+    border: solid 1px black;
+}
+
+.legend {
+    margin-top: 1em;
+    display: flex;
+    flex-direction: column;
+}
+
+.legend-key {
+    margin-bottom: 0.5em;
+}
+
+.legend-category {
+    margin-left: 0.5em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.legend-scale {
+    margin-top: 1em;
+    margin-left: 0.5em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.legend-label {
+    margin-left: 0.5em;
+}
+
+.title {
+    font-weight: 600;
+    font-size: 16pt;
+}
+
+.subtitle {
+    margin-bottom: 1em;
+}
+
+.projects {
+    margin-top: 2em;
+    margin-left: 2em;
+    display: flex;
+    flex-direction: column;
+}
+
+.project {
+    visibility: collapse;
+    height: 0px;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.selected .project {
+    height: auto;
+    visibility: visible;
+    border-top: solid 1px #979797;
+    padding: 0.5em 0;
+}
+
+.project-boxes {
+    display: grid;
+    grid-gap: 0px 0px;
+    grid-template-rows: repeat(auto-fill, 14px);
+    grid-template-columns: repeat(3, 14px);
+    margin: 0.5em;
+    margin-right: 1em;
+}
+
+.project-box {
+    width: 10px;
+    height: 10px;
+    margin: 2px; 
+}
+
+.project-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.project-title {
+    margin-bottom: 0.5em;
+}
+
+.project-status {
+    margin-bottom: 0.2em;
+}
+
+
+
+.category {
+    padding: 0 0.5em 0.5em 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.category-title {
+    font-weight: 600;
+    font-size: 14pt;
+    padding-bottom: 0.5em;
+    border-bottom: solid 1px #979797;
+}
