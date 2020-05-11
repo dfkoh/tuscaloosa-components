@@ -32,15 +32,19 @@ const makeStyle = () => {
     background-color: #${category.color};
 }
 
-.fade .box.${category.className} {
+.fade-hover .box.${category.className} {
     border-color: #${category.colorFade};
     background-color: #${category.colorFade};
 }
 
-.shrink.${category.className} .box.${category.className} {
-    transform: scale(1.0);
+.fade-click .box.${category.className} {
+    border-color: #${category.colorFade};
+    background-color: #${category.colorFade};
 }
 
+.shrink.${category.className}-clicked .box.${category.className} {
+    transform: scale(1.0);
+}
   `
   })
 
@@ -48,13 +52,23 @@ const makeStyle = () => {
     const cls = makeProjectClassName(project.project);
     const category = getCategory(project);
     styleText += `
-.${cls} .fade .box.${cls} {
+.${cls}-hover .fade-hover .box.${cls} {
     border-color: #${category.color};
     background-color: #${category.color};
 }
-.${cls} .selected .project.${cls} {
+
+.fade-click.${cls}-clicked .box.${cls} {
+    border-color: #${category.color};
+    background-color: #${category.color};
+}
+
+.${cls}-hover .selected .project.${cls} {
     background-color: rgba(151, 151, 151, 0.1);
 }
+.${cls}-clicked .selected .project.${cls} {
+    background-color: rgba(151, 151, 151, 0.1);
+}
+
     `
   })
   style.innerHTML = styleText;
@@ -69,6 +83,7 @@ container.appendChild(projection)
 const boxContainer = makeElement("div", "boxContainer");
 projection.appendChild(boxContainer)
 
+
 const title = makeElement("span", "title");
 title.innerText = "CURRENT 10 YEAR PROPOSAL"
 const subtitle = makeElement("span", "subtitle");
@@ -80,10 +95,10 @@ const boxes = makeElement("div", "boxes");
 // Use the wrapper for events so that there aren't "gaps" in the
 // highlightable area
 boxes.onmouseenter = () => { 
-  boxes.classList.add('fade');
+  boxes.classList.add('fade-hover');
 }
 boxes.onmouseleave = () => { 
-  boxes.classList.remove('fade');
+  boxes.classList.remove('fade-hover');
 }
 
 boxContainer.appendChild(boxes);
@@ -163,46 +178,61 @@ const getNextBox = (() => {
 
 let categoryDivs = [];
 
+const clearSelection = () => {
+    boxes.classList.remove("shrink");
+    categoryDivs.forEach((c) => {
+      c.classList.remove("selected");
+      CATEGORIES.forEach((other) => {
+        boxes.classList.remove(`${other.className}-clicked`);
+      })
+      boxes.classList.remove("fade-click");
+    })
+    PROJECTION.forEach((p) => {
+      projection.classList.remove(`${makeProjectClassName(p.project)}-clicked`);
+      boxes.classList.remove(`${makeProjectClassName(p.project)}-clicked`);
+    })
+};
+
+projection.onclick = clearSelection;
 const makeCategory = (category) => {
   const categoryDiv = makeElement("div", "category");
   categoryDivs.push(categoryDiv);
 
-  const clickHandler = (event) => {
-    if (categoryDiv.classList.contains("selected")) {
-      categoryDiv.classList.remove("selected");
-      boxes.classList.remove("shrink");
-      boxes.classList.remove(category.className);
-    } else {
-      categoryDivs.forEach((c) => {
-        c.classList.remove("selected");
-        CATEGORIES.forEach((other) => {
-          boxes.classList.remove(other.className);
-        })
-      })
-      categoryDiv.classList.add("selected");
-      boxes.classList.add("shrink");
-      boxes.classList.add(category.className);
-    }
+  const categoryClickHandler = (event) => {
+    clearSelection();
+    categoryDiv.classList.add("selected");
+    boxes.classList.add("shrink");
+    boxes.classList.add(`${category.className}-clicked`);
+    event.stopPropagation();
   }
 
 
   const title = makeElement("span", "category-title");
-  title.onclick = clickHandler;
+  title.onclick = categoryClickHandler;
   title.innerText = category.name + " Projects"
   categoryDiv.appendChild(title);
 
   const projects = PROJECTION.filter((p) => p.orgNumber === category.orgNumber);
   for (let project of projects) {
     const projectClass = makeProjectClassName(project.project);
+    const projectClickHandler = (event) => {
+      categoryClickHandler(event);
+
+      boxes.classList.add("fade-click");
+      projection.classList.add(`${projectClass}-clicked`);
+      boxes.classList.add(`${projectClass}-clicked`);
+    }
+
     const div = makeElement("div", "project");
     div.classList.add(projectClass);
+    div.onclick = projectClickHandler;
     div.onmouseenter = () => { 
-      boxes.classList.add('fade')
-      projection.classList.add(projectClass);
+      boxes.classList.add('fade-hover')
+      projection.classList.add(`${projectClass}-hover`);
     }
     div.onmouseleave = () => { 
-      boxes.classList.remove('fade')
-      projection.classList.remove(projectClass);
+      boxes.classList.remove('fade-hover')
+      projection.classList.remove(`${projectClass}-hover`);
     }
 
     categoryDiv.appendChild(div);
@@ -221,12 +251,12 @@ const makeCategory = (category) => {
 
       // Use the wrapper for events so that there aren't "gaps" in the
       // clickable/highlightable area
-      wrapper.onclick = clickHandler;
+      wrapper.onclick = projectClickHandler;
       wrapper.onmouseenter = () => { 
-        projection.classList.add(projectClass);
+        projection.classList.add(`${projectClass}-hover`);
       }
       wrapper.onmouseleave = () => { 
-        projection.classList.remove(projectClass);
+        projection.classList.remove(`${projectClass}-hover`);
       }
 
     }
