@@ -211,3 +211,11 @@ const PROJECTION = [
       "date": "3/3/2020",
     },
 ]
+
+window.onload = () => {
+  const elem = document.getElementById("myboxes");
+  elem.setAttribute('item-data', JSON.stringify({
+    categories: CATEGORIES,
+    projection: PROJECTION,
+  }));
+}

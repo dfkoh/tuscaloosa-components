@@ -283,6 +283,48 @@ fundingChartData = {
   textColors: ['white', 'black', 'black'],
 };
 
+const makePieChart = (ctx, chartData) => {
+  return new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: chartData.labels,
+      datasets: [{
+        data: chartData.data,
+        backgroundColor: chartData.colors,
+      }]
+    },
+    options: {
+      cutoutPercentage: 30,
+      tooltips: {
+        enabled: true,
+        callbacks: {
+          label: function(tooltipItem, data) {
+            let label = data.labels[tooltipItem.index];
+            let dataset = data.datasets[tooltipItem.datasetIndex];
+
+            if (label) {
+              label += ': ';
+            }
+            label += moneyFormat.format(dataset.data[tooltipItem.index]);
+            return label;
+          }
+        }
+
+      },
+      /*
+      hover: {
+        animationDuration: 1
+      }, 
+      animation: {
+        duration: 1,
+      },
+      */
+      legend: false,
+      maintainAspectRatio: false,
+    }
+  });
+
+}
 
 const makeChart = (ctx, chartData, isStacked) => {
   let datasets = []
@@ -329,12 +371,7 @@ const makeChart = (ctx, chartData, isStacked) => {
               const oldFont = ctx.font;
               ctx.font = '8pt Montserrat'
               ctx.fillStyle = dataset.textColor;
-              console.log(bar._model);
               if (isStacked) {
-                console.log(
-                  ctx.measureText(data),
-                  (bar._model.x - bar._model.base)
-                );
                 if (ctx.measureText(data).width < (bar._model.x - bar._model.base)) {
                   ctx.fillText(data, bar._model.x - 5, bar._model.y + 5);
                 }
@@ -371,4 +408,5 @@ const makeChart = (ctx, chartData, isStacked) => {
 
 makeChart(document.getElementById('mySpendingChart'), spendingChartData, false);
 makeChart(document.getElementById('myFundingChart'), fundingChartData, true);
+makePieChart(document.getElementById('myPieChart'), spendingChartData);
 
